@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
-import { View, StyleSheet, Image, ImageBackground, Text } from 'react-native';
+import { View, Platform,  KeyboardAvoidingView,  StyleSheet, Image, ImageBackground, Text, TextInput } from 'react-native';
 
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -10,38 +10,69 @@ import { useNavigation } from '@react-navigation/native';
 const Home: React.FC = () => {
   const navigation = useNavigation();
 
+  // STATES
+  const [city, setCity] = useState<string>("");
+  const [uf, setUf] = useState<string>("");
+
+
+  // FUNCTIONS
   function handleNavigation(){
-    navigation.navigate('Points');
+    navigation.navigate('Points', {
+      uf,
+      city,
+    });
   };
   
   return (
-    <ImageBackground
-      source={require('../../assets/home-background.png')}
-      style={styles.container}
-      resizeMode="contain"
-      imageStyle={{ width: 274, height: 368}}
-      >
-      <View style={styles.main}>
-        <Image source={require('../../assets/logo.png')}/>
-        <Text style={styles.title}>Seu marketplace de coleta de resíduos</Text>
-        <Text style={styles.description}>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente</Text>
-      </View>
-      
-    <View style={styles.footer}>
-      <RectButton style={styles.button} onPress={handleNavigation}>
-        <View style={styles.buttonIcon}>
-          <Text> 
-            <Icon name="arrow-right" color="#fff" size={24} />
-          </Text>
+    <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : undefined}> 
+      <ImageBackground
+        source={require('../../assets/home-background.png')}
+        style={styles.container}
+        resizeMode="contain"
+        imageStyle={{ width: 274, height: 368}}
+        >
+        <View style={styles.main}>
+          <Image source={require('../../assets/logo.png')}/>
+            <Text style={styles.title}>Seu marketplace de coleta de resíduos</Text>
+            <Text style={styles.description}>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente</Text>
         </View>
 
-        <Text style={styles.buttonText}> 
-          Entrar
-        </Text>
-      </RectButton>
-    </View>
+     
+        
+      <View style={styles.footer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite a UF"
+          value={uf}
+          onChangeText={setUf}
+          autoCapitalize="characters"
+          autoCorrect={false}
+          maxLength={2}
+        />
 
-    </ImageBackground>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite a cidade"
+          value={city}
+          onChangeText={setCity}
+          autoCorrect={false}
+        />
+
+        <RectButton style={styles.button} onPress={handleNavigation}>
+          <View style={styles.buttonIcon}>
+            <Text> 
+              <Icon name="arrow-right" color="#fff" size={24} />
+            </Text>
+          </View>
+
+          <Text style={styles.buttonText}> 
+            Entrar
+          </Text>
+        </RectButton>
+      </View>
+     
+      </ImageBackground>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -104,7 +135,9 @@ const styles = StyleSheet.create({
     width: 60,
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10,
   },
 
   buttonText: {
